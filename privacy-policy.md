@@ -2,7 +2,7 @@
 
 **Effective Date:** April 21, 2025
 
-This Chrome extension, *NYT Cooking Allergen Checker*, does not collect, store, or transmit any personally identifiable information (PII) from users. It operates solely within the user's browser environment and only interacts with publicly available content on https://cooking.nytimes.com.
+This Chrome extension, *Smarter Recipes - NYT Cooking Enhancer*, does not collect, store, or transmit any personally identifiable information (PII) from users. It operates solely within the user's browser environment and only interacts with publicly available content on https://cooking.nytimes.com.
 
 ## Data Collection
 
