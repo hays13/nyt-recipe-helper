@@ -3,7 +3,6 @@
     "name": "Smarter Recipes - NYT Cooking Enhancer",
     "version": "1.0",
     "description": "Detects allergens in NYT Cooking recipes and displays icons above the ingredient list.",
-    "permissions": ["scripting"],
     "host_permissions": [
         "https://cooking.nytimes.com/*",
         "http://127.0.0.1:5000/"

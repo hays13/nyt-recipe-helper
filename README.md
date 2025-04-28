@@ -1,7 +1,21 @@
 # NYT Cooking Allergen Checker
 
+> ⚠️ **Disclaimer:** This extension uses the ChatGPT 3.5 model to detect allergens. While it aims to be accurate, it may occasionally miss or mislabel allergens. Always double-check ingredient lists manually if you have serious dietary restrictions.
+
 A Chrome extension that automatically scans ingredients on [NYT Cooking](https://cooking.nytimes.com/) recipes and displays icons for the 9 major allergens:
 milk, eggs, fish, shellfish, tree nuts, peanuts, wheat, soy, sesame.
+
+## Screenshots
+
+Example 1:  
+Recipe page showing allergen icons injected above the Total Time section.
+
+![Recipe example showing allergen detection (Example 1)](images/example1.png)
+
+Example 2:  
+Another recipe page showing multiple allergens detected correctly.
+
+![Recipe example showing allergen detection (Example 2)](images/example2.png)
 
 ## Features
 - Automatically extracts ingredient lists from NYT Cooking recipes
