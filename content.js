@@ -17,7 +17,30 @@ const ALLERGENS = {
     console.log("Extracted ingredients:", ingredients);  // debug output
     return ingredients;
   }
-  
+
+  function extractInstructions() {
+    const prepBlock = document.querySelector(".recipebody_prep-block__FegRB");
+    console.log("Found prepBlock:", prepBlock);
+    if (!prepBlock) {
+      console.error("Could not find preparation block.");
+      return "";
+    }
+
+    const stepElements = prepBlock.querySelectorAll(".preparation_stepContent__CFrQM p.pantry--body-long");
+    console.log("Found stepElements:", stepElements.length);
+    if (!stepElements || stepElements.length === 0) {
+      console.error("Could not find preparation step paragraphs.");
+      return "";
+    }
+
+    const instructions = Array.from(stepElements)
+      .map(el => el.textContent.trim())
+      .filter(text => text.length > 0)
+      .join("\n\n");
+    
+    console.log("Extracted instructions:", instructions);
+    return instructions;
+  }
   
   function injectAllergenIcons(allergens) {
     console.log("Allergens passed to icon injector:", allergens);
@@ -37,7 +60,7 @@ const ALLERGENS = {
     allergens.forEach(allergen => {
       const img = document.createElement("img");
       const filename = allergen.replace(/\s+/g, '_').toLowerCase(); // e.g. "tree nuts" → "tree_nuts"
-    img.src = chrome.runtime.getURL(`icons/${filename}.png`);
+      img.src = chrome.runtime.getURL(`icons/${filename}.png`);
       img.alt = allergen;
       img.title = allergen;
       img.style.height = "24px";
@@ -56,7 +79,44 @@ const ALLERGENS = {
     target.parentNode.insertBefore(iconDT, target);
     target.parentNode.insertBefore(iconDD, target);
   }
-  
+
+  function injectEquipmentText(equipment) {
+    if (!equipment || equipment.length === 0) return;
+    
+    const metadataList = document.querySelector("dl.stats_statsTable__1f3pU");
+    if (!metadataList) {
+      console.error("Couldn't find recipe metadata container.");
+      return;
+    }
+
+    // Finds specific <dt> for "Total Time" within metadataList
+    const targetDT = Array.from(metadataList.querySelectorAll("dt.pantry--ui-strong"))
+      .find(dt => dt.textContent.trim().toLowerCase() === "total time");
+
+    if (!targetDT) {
+      console.warn("Couldn't find the 'Total Time' element.");
+      return;
+    }
+    
+    // Create metadata containers and match styles
+    const dt = document.createElement("dt");
+    dt.className = "pantry--ui-strong";
+    dt.textContent = "Equipment Needed";
+
+    const dd = document.createElement("dd");
+    dd.textContent = equipment.join(", ");
+    dd.style.fontSize = "16px";
+    dd.style.lineHeight = "24px";
+    dd.style.fontFamily = "nyt-franklin, sans-serif";
+    dd.style.fontWeight = "400";
+    dd.style.margin = "0 0 8px";
+
+    // Insert before Total Time
+    const parent = targetDT.parentNode;
+    parent.insertBefore(dt, targetDT);
+    parent.insertBefore(dd, targetDT);
+  }
+
   function detectAllergens(ingredients) {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage(
@@ -68,7 +128,27 @@ const ALLERGENS = {
           if (response && response.allergens) {
             resolve(response.allergens);
           } else {
-            console.error("Error from background:", response?.error);
+            console.error("Error from background (allergens):", response?.error);
+            resolve([]);
+          }
+        }
+      );
+    });
+  }
+
+  function detectEquipment(text) {
+    console.log("Sending instructions to backend for equipment detection:", text);
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage(
+        {
+          type: "FETCH_EQUIPMENT",
+          text: text
+        },
+        response => {
+          if (response && response.equipment) {
+            resolve(response.equipment);
+          } else {
+            console.error("Error from background (equipment):", response?.error);
             resolve([]);
           }
         }
@@ -78,8 +158,18 @@ const ALLERGENS = {
   
   // Run on page load
   (async () => {
+    // Function calls for extraction
     const ingredients = extractIngredients();
-    const allergens = await detectAllergens(ingredients);
+    const instructions = extractInstructions();
+
+    // Function calls for detection
+    const [allergens, equipment] = await Promise.all([
+      detectAllergens(ingredients),
+      detectEquipment(instructions)
+    ]);
+
+    // Function calls for injection
     injectAllergenIcons(allergens);
+    injectEquipmentText(equipment);
   })();
   

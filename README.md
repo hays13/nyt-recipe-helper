@@ -1,5 +1,7 @@
 # NYT Cooking Allergen Checker
 
+Add to your browser [Chrome Web Store](https://chromewebstore.google.com/detail/smarter-recipes-nyt-cooki/ekdhaopgnalbkpibihibdhlgmnmmfani?authuser=0&hl=en&pli=1)
+
 > ⚠️ **Disclaimer:** This extension uses the ChatGPT 3.5 model to detect allergens. While it aims to be accurate, it may occasionally miss or mislabel allergens. Always double-check ingredient lists manually if you have serious dietary restrictions.
 
 A Chrome extension that automatically scans ingredients on [NYT Cooking](https://cooking.nytimes.com/) recipes and displays icons for the 9 major allergens:
@@ -18,10 +20,10 @@ Another recipe page showing multiple allergens detected correctly.
 ![Recipe example showing allergen detection (Example 2)](images/example2.png)
 
 ## Features
-- Automatically extracts ingredient lists from NYT Cooking recipes
-- Uses the ChatGPT API to detect allergens in natural language
-- Displays icons for allergens just above the "Total Time" section
-- Clean integration with the site's layout
+- Automatically extracts ingredient lists and preparation steps from NYT Cooking recipes
+- Uses the ChatGPT API to detect allergens and uncommon kitchen equipment
+- Displays allergen icons and an "Equipment Needed" section in the recipe metadata
+- Clean integration with the site’s layout
 - Built with Manifest V3, JavaScript, Flask, and OpenAI API
 
 ## Installation (Developer Mode)
@@ -46,11 +48,11 @@ nyt-allergen-extension/
 
 ## Known Limitations
 - ChatGPT may occasionally miss an allergen or over-label an ingredient
+- Kitchen equipment detection depends on how the recipe is worded
 - Only works on NYT Cooking pages
 - API key must be configured manually in `app.py`
 
 ## To Do (Future Features)
-- Detect required kitchen equipment (e.g. "sheet pan", "Dutch oven")
 - Allow user-defined allergen preferences
-- Add a popup settings UI
-- Recipe scaling functionality
+- Add popup settings UI
+- Enable recipe scaling or substitution suggestions
